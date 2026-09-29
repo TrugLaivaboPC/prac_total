@@ -150,10 +150,3 @@ int main(void)
     }
 }
 
-/*
- * GHI CHU - neu Buzzer la loai THU DONG (passive, can tan so am thanh):
- *   Khong the bat/tat muc logic don gian nhu buzzer_set() o tren. Can
- *   dung Timer1/Timer2 o che do Fast PWM/CTC xuat song vuong ~2-4 kHz ra
- *   chan BUZZER_PIN trong suot thoi gian LED2 dang bat, va dung timer
- *   (dua chan ve muc thap) khi LED2 tat.
- */
