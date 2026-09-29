@@ -1,34 +1,3 @@
-/*
- * GPIO don gian - ATmega328P
- *
- * LOGIC:
- *   LED1     -> nhay lien tuc (500 ms sang / 500 ms tat), tu dong, khong
- *               phu thuoc nut bam.
- *   Nut bam  -> nhan 1 lan thi TOGGLE LED2 (doi trang thai bat/tat).
- *   LED2     -> bat/tat theo nut.
- *   Buzzer   -> keu CUNG LUC voi LED2: LED2 bat thi buzzer keu,
- *               LED2 tat thi buzzer tat (dong bo, khong phai beep ngan).
- *
- * BANG CHAN (doi trong phan CAU HINH neu board thuc te khac):
- *   Nut bam  -> PD2   (input, pull-up noi bo AVR, tich cuc muc THAP)
- *   LED1     -> PB0
- *   LED2     -> PB1
- *   Buzzer   -> PB4
- *
- * GIA DINH CAN KIEM TRA TREN BOARD THUC TE:
- *   - Nut noi GND khi nhan (active-low). Neu board dung pull-down (nut noi
- *     VCC khi nhan) thi doi BUTTON_ACTIVE_LOW thanh 0.
- *   - LED noi qua tro han dong xuong GND (active-high, chan cao thi sang).
- *     Neu LED noi nguoc thi doi LED_ACTIVE_LOW thanh 1.
- *   - Buzzer la loai TICH CUC (active buzzer - chi can cap muc logic la
- *     keu). Neu la buzzer THU DONG (passive, can tao tan so) thi phai
- *     xuat PWM thay vi bat/tat muc logic don gian - xem ghi chu cuoi file.
- *
- * Bien dich:
- *   avr-gcc -mmcu=atmega328p -DF_CPU=16000000UL -Os -o gpio.elf gpio_simple.c
- *   avr-objcopy -O ihex -R .eeprom gpio.elf gpio.hex
- */
-
 #ifndef F_CPU
 #define F_CPU 16000000UL
 #endif
@@ -37,7 +6,7 @@
 #include <avr/interrupt.h>
 #include <stdint.h>
 
-/* ================== CAU HINH CHAN & CUC TINH ================== */
+
 #define BTN_PIN           PD2
 #define BTN_PORT_IN       PIND
 #define BTN_PORT_DDR      DDRD
@@ -55,7 +24,7 @@
 #define BLINK_PERIOD_MS   500u  /* LED1: 500 ms sang, 500 ms tat         */
 #define SAMPLE_PERIOD_MS  5u    /* chu ky lay mau chong doi phim         */
 
-/* ================== BO DEM THOI GIAN (millis) ================== */
+
 static volatile uint32_t ms_ticks = 0;
 
 /* Timer0 CTC: 16 MHz / 64 / 250 = 1 kHz -> ngat moi 1 ms */
@@ -81,12 +50,7 @@ static uint32_t millis(void)
     return t;
 }
 
-/* ================== NUT NHAN - CHONG DOI PHIM KHONG CHAN ================== */
-/*
- * Ky thuat "debounce shift register": giu 8 mau gan nhat trong 1 byte.
- * Chi khi 8 mau lien tiep DEU la "nhan" moi coi la pressed on dinh;
- * DEU la "nha" moi coi la released on dinh. Loai rung phim khong can delay.
- */
+
 static uint8_t  btn_history       = BUTTON_ACTIVE_LOW ? 0xFF : 0x00;
 static uint8_t  btn_stable        = 0;   /* trang thai da loc rung */
 static uint8_t  btn_prev_stable   = 0;   /* de phat hien canh nhan */
@@ -122,7 +86,7 @@ static uint8_t button_sample(void)
     return edge;
 }
 
-/* ================== OUTPUT: LED / BUZZER ================== */
+
 static void output_init(void)
 {
     OUT_PORT_DDR |= (1 << LED1_PIN) | (1 << LED2_PIN) | (1 << BUZZER_PIN);
