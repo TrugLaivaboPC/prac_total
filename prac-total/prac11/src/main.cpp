@@ -1,21 +1,3 @@
-/*
- * Practice 11 - Do cuong do anh sang bang LDR - board TDC-3628 (ATmega328P)
- * Phien ban cho LED 7 doan co 8 duong doan a..h  (h = dau cham dp)
- *
- * Bang dau day:
- *   LDR  (khoi "CB anh sang", J40)   -> PC0 / A0
- *   Doan a b c d e f                 -> PD2 PD3 PD4 PD5 PD6 PD7
- *   Doan g                           -> PB0
- *   Doan h (dp)                      -> PB1
- *   Chon digit D1 D2 D3 D4           -> PB2 PB3 PB4 PB5
- *   LED bao toi (khoi "Led don" L1)  -> PC1
- *   UART -> cong USB                 -> PD0 (RX), PD1 (TX)  [khong dau day]
- *
- * Bien dich:
- *   avr-gcc -mmcu=atmega328p -DF_CPU=16000000UL -Os -o ldr.elf ldr_tdc3628_8seg.c
- *   avr-objcopy -O ihex -R .eeprom ldr.elf ldr.hex
- */
-
 #ifndef F_CPU
 #define F_CPU 16000000UL
 #endif
@@ -219,11 +201,7 @@ ISR(TIMER0_COMPA_vect)
         seg_digit_on(digit);
 }
 
-/*
- * n         : so can hien thi (0..9999)
- * dots      : mat na dau cham, bit0 = digit trai nhat
- * blank_lead: 1 = xoa so 0 vo nghia o dau, 0 = hien du 4 chu so
- */
+
 static void display_number(uint16_t n, uint8_t dots, uint8_t blank_lead)
 {
     uint8_t d[4];
